@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>서비스 선택</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Space+Grotesk:wght@400;600&display=swap");
+
+      :root {
+        --ink: #151518;
+        --muted: #6b6b78;
+        --accent: #f2b233;
+        --bg-a: #f7f2ea;
+        --bg-b: #e9eef6;
+        --card: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", "Noto Sans KR", sans-serif;
+        color: var(--ink);
+        min-height: 100vh;
+        background:
+          radial-gradient(900px 600px at 12% 10%, rgba(255, 206, 151, 0.45), transparent 60%),
+          radial-gradient(700px 500px at 85% 20%, rgba(160, 196, 255, 0.35), transparent 60%),
+          linear-gradient(120deg, var(--bg-a), var(--bg-b));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+      }
+
+      .shell {
+        width: min(980px, 100%);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 28px;
+        padding: 48px;
+        box-shadow:
+          0 30px 80px rgba(17, 17, 24, 0.18),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+      }
+
+      .title {
+        font-family: "Playfair Display", "Noto Serif KR", serif;
+        font-size: clamp(30px, 3.6vw, 48px);
+        margin: 0 0 12px;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle {
+        margin: 0 0 32px;
+        color: var(--muted);
+        font-size: clamp(14px, 1.4vw, 18px);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px 20px;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid rgba(18, 18, 24, 0.08);
+        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+        display: grid;
+        gap: 8px;
+        min-height: 140px;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(18, 18, 24, 0.2);
+        box-shadow: 0 20px 40px rgba(17, 17, 24, 0.12);
+      }
+
+      .card .label {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--muted);
+      }
+
+      .card .name {
+        font-family: "Playfair Display", "Noto Serif KR", serif;
+        font-size: 22px;
+      }
+
+      .card .desc {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .accent {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      .accent::after {
+        content: "";
+        width: 32px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 999px;
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          padding: 32px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <p class="accent">Gateway</p>
+      <h1 class="title">서비스 선택, ahading</h1>
+      <p class="subtitle">여러 프로젝트로 이동하는 단일 게이트웨이입니다. 필요한 서비스를 빠르게 시작하세요.</p>
+      <section class="grid">
+        <a class="card" href="http://listening.thesysm.com/">
+          <span class="label">Learning</span>
+          <span class="name">무한반복</span>
+          <span class="desc">집중 세션으로 듣기 실력을 강화합니다.</span>
+        </a>
+        <a class="card" href="http://movies.thesysm.com/">
+          <span class="label">Media</span>
+          <span class="name">영화보기</span>
+          <span class="desc">선호 장르와 플레이리스트를 한 번에.</span>
+        </a>
+        <a class="card" href="http://address.thesysm.com/">
+          <span class="label">Utility</span>
+          <span class="name">주소관리</span>
+          <span class="desc">연락처와 주소를 깔끔하게 정리합니다.</span>
+        </a>
+      </section>
+    </main>
+  </body>
+</html>

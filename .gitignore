@@ -1,0 +1,27 @@
+
+# Django stuff
+*.sqlite3
+*.db
+db.sqlite3
+media/
+staticfiles/
+.DS_Store
+logs/
+production/
+_doc/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+# Environments
+.env
+.venv
+AGENTS.md
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
