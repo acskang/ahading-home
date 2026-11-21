@@ -1,14 +1,16 @@
-
 # Django stuff
 *.sqlite3
 *.db
 db.sqlite3
-media/
-staticfiles/
 .DS_Store
-logs/
+staticfiles/
+media/
 production/
+logs/
 _doc/
+_research/
+_ref
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

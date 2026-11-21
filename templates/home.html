@@ -1,154 +1,1223 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>서비스 선택</title>
+    <title>THESYSM Master Gateway</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Space+Grotesk:wght@400;600&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
 
       :root {
-        --ink: #151518;
-        --muted: #6b6b78;
-        --accent: #f2b233;
-        --bg-a: #f7f2ea;
-        --bg-b: #e9eef6;
-        --card: #ffffff;
+        --bg: #06070b;
+        --bg-soft: #0d1118;
+        --panel: rgba(14, 18, 28, 0.88);
+        --panel-strong: rgba(19, 24, 38, 0.94);
+        --line: rgba(150, 184, 255, 0.16);
+        --line-strong: rgba(150, 184, 255, 0.3);
+        --text: #eef2ff;
+        --muted: #9aa3b8;
+        --accent: #79a7ff;
+        --accent-soft: rgba(121, 167, 255, 0.18);
+        --success: #8fe3c2;
+        --shadow: rgba(0, 0, 0, 0.42);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
       body {
         margin: 0;
-        font-family: "Space Grotesk", "Noto Sans KR", sans-serif;
-        color: var(--ink);
+        font-family: "IBM Plex Sans", "Noto Sans KR", sans-serif;
+        color: var(--text);
         min-height: 100vh;
         background:
-          radial-gradient(900px 600px at 12% 10%, rgba(255, 206, 151, 0.45), transparent 60%),
-          radial-gradient(700px 500px at 85% 20%, rgba(160, 196, 255, 0.35), transparent 60%),
-          linear-gradient(120deg, var(--bg-a), var(--bg-b));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 48px 24px;
+          radial-gradient(900px 620px at 15% 18%, rgba(65, 95, 170, 0.34), transparent 62%),
+          radial-gradient(680px 440px at 86% 14%, rgba(98, 225, 194, 0.12), transparent 62%),
+          linear-gradient(180deg, #05060a 0%, #0a0d14 52%, #05060a 100%);
+        padding: 32px 20px 56px;
       }
 
       .shell {
-        width: min(980px, 100%);
-        background: rgba(255, 255, 255, 0.78);
-        border: 1px solid rgba(255, 255, 255, 0.6);
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .shell::before {
+        content: "";
+        position: absolute;
+        inset: 24px 0 auto auto;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(121, 167, 255, 0.16), transparent 68%);
+        pointer-events: none;
+        filter: blur(6px);
+      }
+
+      .frame {
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+          var(--panel);
+        border: 1px solid var(--line);
         border-radius: 28px;
-        padding: 48px;
+        padding: 32px;
         box-shadow:
-          0 30px 80px rgba(17, 17, 24, 0.18),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(12px);
+          0 30px 80px var(--shadow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 34px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        overflow: hidden;
+        flex: 0 0 auto;
+        background-color: #24364e;
+        background-image: url("{% static 'img/peach-white.png' %}");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 76% auto;
+        border: 1px solid rgba(121, 167, 255, 0.32);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+      }
+
+      .brand-copy {
+        display: grid;
+        gap: 2px;
+      }
+
+      .brand-copy strong {
+        font-size: 14px;
+        letter-spacing: 0.12em;
+      }
+
+      .brand-copy span,
+      .status,
+      .hero-copy p,
+      .service-meta,
+      .service-desc,
+      .service-arrow,
+      .footnote {
+        color: var(--muted);
+      }
+
+      .status {
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(143, 227, 194, 0.2);
+        background: rgba(143, 227, 194, 0.07);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.9fr);
+        gap: 28px;
+        align-items: start;
+        margin-bottom: 30px;
+      }
+
+      .hero-copy {
+        width: 100%;
+        max-width: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+      }
+
+      .hero-eyebrow-block {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+      }
+
+      .hero-title-block {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .title-row {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(10px, 1.4vw, 16px);
+        width: fit-content;
+        max-width: 100%;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 18px;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #bdd2ff;
+        justify-content: flex-start;
+        align-self: flex-start;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(121, 167, 255, 0.2), rgba(121, 167, 255, 0.9));
       }
 
       .title {
-        font-family: "Playfair Display", "Noto Serif KR", serif;
-        font-size: clamp(30px, 3.6vw, 48px);
-        margin: 0 0 12px;
+        margin: 0;
+        font-size: 28pt;
+        line-height: 34pt;
         letter-spacing: -0.02em;
+        max-width: none;
+        text-align: center;
+        white-space: nowrap;
       }
 
-      .subtitle {
-        margin: 0 0 32px;
-        color: var(--muted);
-        font-size: clamp(14px, 1.4vw, 18px);
+      .title-media {
+        flex: 0 0 clamp(68px, 7vw, 82px);
+        height: clamp(68px, 7vw, 82px);
+        overflow: hidden;
+        border-radius: 20px;
+        border: 1px solid rgba(121, 167, 255, 0.22);
+        background: rgba(255, 255, 255, 0.03);
+        box-shadow:
+          0 14px 28px rgba(0, 0, 0, 0.24),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.04);
       }
 
-      .grid {
+      .title-media img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .hero-copy p {
+        margin: 18px auto 0;
+        font-size: clamp(15px, 1.6vw, 19px);
+        line-height: 1.7;
+        max-width: 40ch;
+        text-align: center;
+      }
+
+      .hero-panel {
+        background:
+          linear-gradient(180deg, rgba(121, 167, 255, 0.12), rgba(121, 167, 255, 0.02)),
+          var(--panel-strong);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 22px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 16px;
+        align-self: stretch;
+      }
+
+      .hero-panel strong {
+        display: block;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #d7e3ff;
+      }
+
+      .hero-panel p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      .hero-panel ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+
+      .hero-panel li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 14px;
+      }
+
+      .hero-panel li span:last-child {
+        color: var(--success);
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: -0.03em;
+      }
+
+      .section-head p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .services {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
       }
 
       .card {
-        background: var(--card);
-        border-radius: 18px;
-        padding: 22px 20px;
+        position: relative;
+        overflow: hidden;
+        min-height: 210px;
+        border-radius: 24px;
+        padding: 22px;
         text-decoration: none;
-        color: inherit;
-        border: 1px solid rgba(18, 18, 24, 0.08);
-        transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+        color: var(--text);
+        background:
+          linear-gradient(180deg, rgba(121, 167, 255, 0.06), rgba(121, 167, 255, 0.01)),
+          rgba(12, 16, 24, 0.92);
+        border: 1px solid var(--line);
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          box-shadow 180ms ease,
+          background 180ms ease;
         display: grid;
-        gap: 8px;
-        min-height: 140px;
+        gap: 14px;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: auto -20% -45% auto;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(121, 167, 255, 0.22), transparent 68%);
+        transition: transform 180ms ease;
       }
 
       .card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(18, 18, 24, 0.2);
-        box-shadow: 0 20px 40px rgba(17, 17, 24, 0.12);
+        transform: translateY(-6px);
+        border-color: var(--line-strong);
+        box-shadow: 0 26px 50px rgba(0, 0, 0, 0.36);
+        background:
+          linear-gradient(180deg, rgba(121, 167, 255, 0.11), rgba(121, 167, 255, 0.03)),
+          rgba(14, 19, 29, 0.96);
       }
 
-      .card .label {
-        font-size: 13px;
+      .card:hover::before {
+        transform: scale(1.08);
+      }
+
+      .inactive-card,
+      .inactive-card:hover {
+        transform: none;
+        border-color: rgba(154, 163, 184, 0.22);
+        box-shadow: none;
+        cursor: not-allowed;
+        background:
+          linear-gradient(180deg, rgba(121, 167, 255, 0.06), rgba(121, 167, 255, 0.01)),
+          rgba(12, 16, 24, 0.92);
+      }
+
+      .inactive-card::before,
+      .inactive-card:hover::before {
+        transform: none;
+      }
+
+      .inactive-card > *:not(.inactive-overlay) {
+        position: relative;
+        z-index: 1;
+      }
+
+      .inactive-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(118, 126, 138, 0.56);
+        backdrop-filter: blur(1.5px);
+      }
+
+      .inactive-overlay span {
+        color: #ff6b6b;
+        font-size: clamp(28px, 3vw, 42px);
+        font-weight: 700;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        letter-spacing: 0.16em;
-        color: var(--muted);
+        text-shadow: 0 10px 24px rgba(60, 0, 0, 0.28);
       }
 
-      .card .name {
-        font-family: "Playfair Display", "Noto Serif KR", serif;
-        font-size: 22px;
+      .service-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-family: "Space Mono", monospace;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
       }
 
-      .card .desc {
-        font-size: 14px;
-        color: var(--muted);
-        line-height: 1.4;
+      .service-meta span:last-child {
+        color: #d7e3ff;
       }
 
-      .accent {
+      .service-name {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+      }
+
+      .service-desc {
+        font-size: 15px;
+        line-height: 1.65;
+        max-width: 28ch;
+      }
+
+      .service-arrow {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        font-weight: 600;
-        font-size: 14px;
-        color: var(--ink);
+        margin-top: auto;
+        font-size: 13px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
       }
 
-      .accent::after {
-        content: "";
-        width: 32px;
-        height: 2px;
-        background: var(--accent);
-        border-radius: 999px;
+      .service-arrow::after {
+        content: "->";
+        color: var(--accent);
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 24px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .footnote {
+        font-size: 13px;
+      }
+
+      .footer strong {
+        color: #d7e3ff;
+      }
+
+      .th-chat-widget {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 40;
+        font-family: "IBM Plex Sans", "Noto Sans KR", sans-serif;
+      }
+
+      .th-chat-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+        cursor: pointer;
+        line-height: 0;
+      }
+
+      .th-chat-button:focus-visible,
+      .th-chat-size-button:focus-visible,
+      .th-chat-maximize:focus-visible,
+      .th-chat-save:focus-visible,
+      .th-chat-close:focus-visible,
+      .th-chat-send:focus-visible,
+      .th-chat-input:focus-visible {
+        outline: 3px solid rgba(143, 227, 194, 0.28);
+        outline-offset: 3px;
+      }
+
+      .th-chat-button-image {
+        display: block;
+        width: clamp(62px, 8vw, 78px);
+        height: auto;
+        transform-origin: center bottom;
+        animation: th-chat-button-drift 4.8s ease-in-out infinite;
+        will-change: transform;
+      }
+
+      @keyframes th-chat-button-drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+
+        22% {
+          transform: translate3d(0, -2px, 0) rotate(-2deg);
+        }
+
+        52% {
+          transform: translate3d(0, -1px, 0) rotate(1.5deg);
+        }
+
+        78% {
+          transform: translate3d(0, -3px, 0) rotate(-1deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .th-chat-button-image {
+          animation: none;
+        }
+      }
+
+      .th-chat-panel {
+        position: absolute;
+        right: 0;
+        bottom: 70px;
+        display: flex;
+        flex-direction: column;
+        width: var(--th-chat-panel-width, min(380px, calc(100vw - 32px)));
+        height: var(--th-chat-panel-height, min(560px, calc(100vh - 120px)));
+        max-width: calc(100vw - 48px);
+        max-height: calc(100vh - 120px);
+        overflow: hidden;
+        border: 1px solid var(--line-strong);
+        border-radius: 22px;
+        background: rgba(12, 17, 28, 0.98);
+        color: var(--text);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+        backdrop-filter: blur(18px);
+      }
+
+      .th-chat-panel.th-chat-panel-maximized {
+        position: fixed;
+        inset: 24px;
+        width: auto;
+        height: auto;
+        max-width: none;
+        max-height: none;
+      }
+
+      .th-chat-panel[hidden] {
+        display: none;
+      }
+
+      .th-chat-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(121, 167, 255, 0.08);
+      }
+
+      .th-chat-header strong,
+      .th-chat-header span {
+        display: block;
+      }
+
+      .th-chat-header strong {
+        font-size: 16px;
+      }
+
+      .th-chat-header span {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .th-chat-header-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .th-chat-size-button,
+      .th-chat-maximize,
+      .th-chat-save,
+      .th-chat-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        cursor: pointer;
+      }
+
+      .th-chat-size-button,
+      .th-chat-maximize,
+      .th-chat-close {
+        width: 34px;
+        line-height: 1;
+      }
+
+      .th-chat-size-button,
+      .th-chat-maximize {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .th-chat-save {
+        padding: 0 10px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+
+      .th-chat-close {
+        font-size: 22px;
+      }
+
+      .th-chat-size-button:disabled {
+        opacity: 0.42;
+        cursor: not-allowed;
+      }
+
+      .th-chat-messages {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow-y: auto;
+        padding: 16px;
+      }
+
+      .th-chat-message {
+        max-width: 86%;
+      }
+
+      .th-chat-message p {
+        margin: 0;
+        border-radius: 16px;
+        padding: 10px 12px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        line-height: 1.5;
+      }
+
+      .th-chat-message-user {
+        align-self: flex-end;
+      }
+
+      .th-chat-message-user p {
+        border-bottom-right-radius: 5px;
+        background: #d7e3ff;
+        color: #101827;
+      }
+
+      .th-chat-message-assistant {
+        align-self: flex-start;
+      }
+
+      .th-chat-message-assistant p {
+        border: 1px solid var(--line);
+        border-bottom-left-radius: 5px;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text);
+      }
+
+      .th-chat-message-loading p {
+        color: var(--muted);
+      }
+
+      .th-chat-error {
+        margin: 0 16px 10px;
+        border: 1px solid rgba(255, 118, 118, 0.24);
+        border-radius: 12px;
+        background: rgba(255, 118, 118, 0.1);
+        color: #ffb4b4;
+        padding: 9px 10px;
+        font-size: 13px;
+      }
+
+      .th-chat-form {
+        display: flex;
+        align-items: end;
+        gap: 10px;
+        padding: 12px;
+        border-top: 1px solid var(--line);
+      }
+
+      .th-chat-input {
+        flex: 1;
+        min-height: 44px;
+        max-height: 120px;
+        resize: vertical;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        padding: 10px 12px;
+        font: inherit;
+      }
+
+      .th-chat-input::placeholder {
+        color: var(--muted);
+      }
+
+      .th-chat-send {
+        flex: 0 0 auto;
+        min-height: 44px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--success);
+        color: #08111b;
+        padding: 0 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .th-chat-send:disabled,
+      .th-chat-input:disabled {
+        opacity: 0.68;
+        cursor: wait;
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 640px) {
-        .shell {
-          padding: 32px 24px;
+        body {
+          padding: 18px 14px 32px;
+        }
+
+        .frame {
+          padding: 20px;
+          border-radius: 22px;
+        }
+
+        .topbar,
+        .section-head,
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .title {
+          font-size: clamp(34px, 14vw, 52px);
+        }
+
+        .title-row {
+          gap: 8px;
+        }
+
+        .title-media {
+          flex-basis: clamp(56px, 20vw, 70px);
+          height: clamp(56px, 20vw, 70px);
+          border-radius: 16px;
+        }
+
+        .th-chat-widget {
+          right: 14px;
+          bottom: 14px;
+          left: 14px;
+          display: flex;
+          justify-content: center;
+        }
+
+        .th-chat-button {
+          min-width: auto;
+        }
+
+        .th-chat-panel {
+          position: fixed;
+          right: 10px;
+          bottom: 78px;
+          left: 10px;
+          width: min(var(--th-chat-panel-width, calc(100vw - 20px)), calc(100vw - 20px));
+          height: min(var(--th-chat-panel-height, 72vh), calc(100vh - 96px));
+          max-height: calc(100vh - 96px);
+        }
+
+        .th-chat-panel.th-chat-panel-maximized {
+          inset: 10px;
+        }
+
+        .th-chat-form {
+          align-items: stretch;
+        }
+
+        .th-chat-input {
+          min-width: 0;
         }
       }
     </style>
   </head>
   <body>
     <main class="shell">
-      <p class="accent">Gateway</p>
-      <h1 class="title">서비스 선택, ahading</h1>
-      <p class="subtitle">여러 프로젝트로 이동하는 단일 게이트웨이입니다. 필요한 서비스를 빠르게 시작하세요.</p>
-      <section class="grid">
-        <a class="card" href="http://listening.thesysm.com/">
-          <span class="label">Learning</span>
-          <span class="name">무한반복</span>
-          <span class="desc">집중 세션으로 듣기 실력을 강화합니다.</span>
-        </a>
-        <a class="card" href="http://movies.thesysm.com/">
-          <span class="label">Media</span>
-          <span class="name">영화보기</span>
-          <span class="desc">선호 장르와 플레이리스트를 한 번에.</span>
-        </a>
-        <a class="card" href="http://address.thesysm.com/">
-          <span class="label">Utility</span>
-          <span class="name">주소관리</span>
-          <span class="desc">연락처와 주소를 깔끔하게 정리합니다.</span>
-        </a>
+      <section class="frame">
+        <header class="topbar">
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true"></div>
+            <div class="brand-copy">
+              <strong>THESYSM</strong>
+              <span>Master Service Gateway</span>
+            </div>
+          </div>
+          <div class="status">Operational Gateway</div>
+        </header>
+
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="hero-eyebrow-block">
+              <p class="eyebrow">Software Systems Company</p>
+            </div>
+            <div class="hero-title-block">
+              <div class="title-row">
+                <h1 class="title">AHADING<br />아름다운한글코딩</h1>
+                <div class="title-media" aria-hidden="true">
+                  <img src="{% static 'img/cskang-caricature-myfavorite.png' %}?v=20260813a" alt="" />
+                </div>
+              </div>
+            </div>
+            <p>
+              THESYSM의 제품과 내부 서비스는 각각 다른 목적을 갖지만, 이 화면에서는 하나의
+              소프트웨어 회사처럼 정돈된 진입 경험을 제공합니다. 서비스 선택과 접근이 빠르고,
+              구조는 단순하며, 브랜드 이미지는 명확해야 합니다.
+            </p>
+          </div>
+
+          <aside class="hero-panel">
+            <div>
+              <strong>Gateway Role</strong>
+              <p>프로덕트 탐색, 운영 접근, 서비스 진입을 하나의 화면에서 정리하는 회사 대표 포털입니다.</p>
+            </div>
+            <ul>
+              <li><span>Service catalog</span><span>online</span></li>
+              <li><span>Secure redirects</span><span>https</span></li>
+              <li><span>Company-facing design</span><span>active</span></li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <div>
+              <h2>서비스 선택</h2>
+              <p>제품별 진입점을 명확하게 분리한 회사 공용 서비스 인덱스입니다.</p>
+            </div>
+          </div>
+
+          <div class="services">
+            {% for service in services %}
+            {% if service.is_active %}
+            <a class="card" href="{{ service.url }}">
+              <div class="service-meta">
+                <span>{{ service.category }}</span>
+                <span>{{ service.index }}</span>
+              </div>
+              <div class="service-name">{{ service.name }}</div>
+              <div class="service-desc">{{ service.desc }}</div>
+              <div class="service-arrow">Open Service</div>
+            </a>
+            {% else %}
+            <div class="card inactive-card" aria-disabled="true">
+              <div class="service-meta">
+                <span>{{ service.category }}</span>
+                <span>{{ service.index }}</span>
+              </div>
+              <div class="service-name">{{ service.name }}</div>
+              <div class="service-desc">{{ service.desc }}</div>
+              <div class="service-arrow">Open Service</div>
+              <div class="inactive-overlay"><span>Inactive</span></div>
+            </div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </section>
+
+        <footer class="footer">
+          <div class="footnote">THESYSM products and utilities are organized here as a single company-facing surface.</div>
+          <div class="footnote"><strong>Gateway:</strong> thesysm.com</div>
+        </footer>
       </section>
     </main>
+    {% if chat_widget_enabled %}
+      <div class="th-chat-widget" data-th-chat-widget data-csrf-token="{{ csrf_token }}">
+        <button class="th-chat-button" type="button" data-th-chat-toggle aria-label="THESYSM AI 챗봇 열기" aria-expanded="false">
+          <img class="th-chat-button-image" src="{% static 'img/demon-peach.png' %}" alt="" aria-hidden="true" />
+        </button>
+        <section class="th-chat-panel" data-th-chat-panel aria-label="THESYSM AI chat" hidden>
+          <header class="th-chat-header">
+            <div>
+              <strong>THESYSM AI</strong>
+              <span>서비스 안내와 진입 도움</span>
+            </div>
+            <div class="th-chat-header-actions">
+              <button class="th-chat-size-button" type="button" data-th-chat-smaller aria-label="채팅창 축소">-</button>
+              <button class="th-chat-size-button" type="button" data-th-chat-larger aria-label="채팅창 확대">+</button>
+              <button class="th-chat-maximize" type="button" data-th-chat-maximize aria-label="채팅창 최대화">□</button>
+              <button class="th-chat-save" type="button" data-th-chat-save aria-label="대화 저장">저장</button>
+              <button class="th-chat-close" type="button" data-th-chat-close aria-label="채팅창 닫기">×</button>
+            </div>
+          </header>
+          <div class="th-chat-messages" data-th-chat-messages aria-live="polite">
+            <div class="th-chat-message th-chat-message-assistant">
+              <p>안녕하세요. THESYSM 서비스 선택, theDetect, thePET, petlens 이용 안내를 도와드릴게요.</p>
+            </div>
+          </div>
+          <p class="th-chat-error" data-th-chat-error hidden></p>
+          <form class="th-chat-form" data-th-chat-form>
+            <label class="visually-hidden" for="th-chat-input">메시지</label>
+            <textarea id="th-chat-input" class="th-chat-input" data-th-chat-input rows="2" maxlength="1000" placeholder="어떤 서비스를 찾고 있나요?"></textarea>
+            <button class="th-chat-send" type="submit" data-th-chat-send aria-label="메시지 전송">전송</button>
+          </form>
+        </section>
+      </div>
+      <script>
+        (function () {
+          const widget = document.querySelector("[data-th-chat-widget]");
+          if (!widget) {
+            return;
+          }
+
+          const toggleButton = widget.querySelector("[data-th-chat-toggle]");
+          const closeButton = widget.querySelector("[data-th-chat-close]");
+          const smallerButton = widget.querySelector("[data-th-chat-smaller]");
+          const largerButton = widget.querySelector("[data-th-chat-larger]");
+          const maximizeButton = widget.querySelector("[data-th-chat-maximize]");
+          const saveButton = widget.querySelector("[data-th-chat-save]");
+          const panel = widget.querySelector("[data-th-chat-panel]");
+          const form = widget.querySelector("[data-th-chat-form]");
+          const input = widget.querySelector("[data-th-chat-input]");
+          const sendButton = widget.querySelector("[data-th-chat-send]");
+          const messages = widget.querySelector("[data-th-chat-messages]");
+          const errorBox = widget.querySelector("[data-th-chat-error]");
+          const csrfToken = getCookie("csrftoken") || widget.dataset.csrfToken || "";
+          const history = [];
+          const maxHistoryMessages = 6;
+          const panelSizes = [
+            { width: "340px", height: "500px" },
+            { width: "380px", height: "560px" },
+            { width: "440px", height: "640px" },
+            { width: "500px", height: "720px" },
+            { width: "620px", height: "820px" },
+          ];
+          const defaultPanelSizeIndex = 1;
+          const panelSizeStorageKey = "thesysm-chat-panel-size-index";
+          const panelMaximizedStorageKey = "thesysm-chat-panel-maximized";
+          let panelSizeIndex = defaultPanelSizeIndex;
+          let panelMaximized = false;
+
+          function getCookie(name) {
+            const cookies = document.cookie ? document.cookie.split(";") : [];
+            for (const cookie of cookies) {
+              const trimmed = cookie.trim();
+              if (trimmed.startsWith(`${name}=`)) {
+                return decodeURIComponent(trimmed.slice(name.length + 1));
+              }
+            }
+            return "";
+          }
+
+          function setOpen(open) {
+            panel.hidden = !open;
+            toggleButton.setAttribute("aria-expanded", open ? "true" : "false");
+            if (open) {
+              input.focus();
+            }
+          }
+
+          function setBusy(busy) {
+            input.disabled = busy;
+            sendButton.disabled = busy;
+            sendButton.textContent = busy ? "응답 중" : "전송";
+          }
+
+          function showError(message) {
+            errorBox.textContent = message;
+            errorBox.hidden = !message;
+          }
+
+          function appendMessage(role, content, loading) {
+            const item = document.createElement("div");
+            item.className = `th-chat-message th-chat-message-${role}`;
+            if (loading) {
+              item.classList.add("th-chat-message-loading");
+            }
+            const text = document.createElement("p");
+            text.textContent = content;
+            item.appendChild(text);
+            messages.appendChild(item);
+            messages.scrollTop = messages.scrollHeight;
+            return item;
+          }
+
+          function remember(role, content) {
+            history.push({ role, content });
+            while (history.length > maxHistoryMessages) {
+              history.shift();
+            }
+          }
+
+          function clamp(value, min, max) {
+            return Math.min(Math.max(value, min), max);
+          }
+
+          function updateSizeControls() {
+            smallerButton.disabled = panelMaximized || panelSizeIndex === 0;
+            largerButton.disabled = panelMaximized || panelSizeIndex === panelSizes.length - 1;
+          }
+
+          function updateMaximizeControl() {
+            maximizeButton.textContent = panelMaximized ? "↙" : "□";
+            maximizeButton.setAttribute(
+              "aria-label",
+              panelMaximized ? "채팅창 기본 크기로 복원" : "채팅창 최대화",
+            );
+          }
+
+          function applyPanelSize() {
+            const size = panelSizes[panelSizeIndex];
+            panel.style.setProperty("--th-chat-panel-width", size.width);
+            panel.style.setProperty("--th-chat-panel-height", size.height);
+            panel.classList.toggle("th-chat-panel-maximized", panelMaximized);
+            updateSizeControls();
+            updateMaximizeControl();
+          }
+
+          function persistPanelSize() {
+            try {
+              window.localStorage.setItem(panelSizeStorageKey, String(panelSizeIndex));
+              window.localStorage.setItem(panelMaximizedStorageKey, panelMaximized ? "1" : "0");
+            } catch (error) {
+              // Ignore storage failures and keep the in-memory size.
+            }
+          }
+
+          function loadPanelSize() {
+            try {
+              const saved = window.localStorage.getItem(panelSizeStorageKey);
+              const parsed = Number.parseInt(saved || "", 10);
+              if (Number.isInteger(parsed)) {
+                panelSizeIndex = clamp(parsed, 0, panelSizes.length - 1);
+              }
+              panelMaximized = window.localStorage.getItem(panelMaximizedStorageKey) === "1";
+            } catch (error) {
+              panelSizeIndex = defaultPanelSizeIndex;
+              panelMaximized = false;
+            }
+            applyPanelSize();
+          }
+
+          function changePanelSize(delta) {
+            const nextIndex = clamp(panelSizeIndex + delta, 0, panelSizes.length - 1);
+            if (nextIndex === panelSizeIndex) {
+              return;
+            }
+            panelSizeIndex = nextIndex;
+            applyPanelSize();
+            persistPanelSize();
+          }
+
+          function togglePanelMaximized() {
+            panelMaximized = !panelMaximized;
+            applyPanelSize();
+            persistPanelSize();
+          }
+
+          function buildConversationText() {
+            const lines = [
+              "THESYSM AI Chat",
+              `Saved: ${new Date().toLocaleString("ko-KR")}`,
+              "",
+            ];
+
+            messages.querySelectorAll(".th-chat-message").forEach((item) => {
+              const role = item.classList.contains("th-chat-message-user") ? "User" : "THESYSM AI";
+              const text = item.querySelector("p")?.textContent?.trim();
+              if (!text) {
+                return;
+              }
+              lines.push(`${role}: ${text}`, "");
+            });
+
+            return lines.join("\n");
+          }
+
+          function buildDownloadTimestamp() {
+            const now = new Date();
+            const parts = [
+              now.getFullYear(),
+              String(now.getMonth() + 1).padStart(2, "0"),
+              String(now.getDate()).padStart(2, "0"),
+              String(now.getHours()).padStart(2, "0"),
+              String(now.getMinutes()).padStart(2, "0"),
+            ];
+            return parts.join("");
+          }
+
+          function saveConversation() {
+            const blob = new Blob([buildConversationText()], {
+              type: "text/plain;charset=utf-8",
+            });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `thesysm-ai-chat-${buildDownloadTimestamp()}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.setTimeout(() => {
+              window.URL.revokeObjectURL(url);
+            }, 1000);
+          }
+
+          async function sendMessage(message) {
+            showError("");
+            appendMessage("user", message, false);
+            remember("user", message);
+            const loading = appendMessage("assistant", "답변을 준비하고 있습니다...", true);
+            setBusy(true);
+            try {
+              const response = await fetch("/api/llama/chat/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrfToken,
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                  message,
+                  history: history.slice(0, -1),
+                }),
+              });
+              const responseText = await response.text();
+              let data = null;
+              try {
+                data = JSON.parse(responseText);
+              } catch (parseError) {
+                throw new Error("AI 챗봇 요청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요.");
+              }
+              loading.remove();
+              if (!response.ok || !data.ok) {
+                throw new Error(data.error || "AI 챗봇 응답을 가져오지 못했습니다.");
+              }
+              appendMessage("assistant", data.reply, false);
+              remember("assistant", data.reply);
+            } catch (error) {
+              loading.remove();
+              const messageText = error.message || "지금은 AI 챗봇 응답이 지연되고 있습니다. 잠시 후 다시 시도해 주세요.";
+              appendMessage("assistant", messageText, false);
+              showError(messageText);
+            } finally {
+              setBusy(false);
+              input.focus();
+            }
+          }
+
+          toggleButton.addEventListener("click", () => {
+            setOpen(panel.hidden);
+          });
+
+          closeButton.addEventListener("click", () => {
+            setOpen(false);
+          });
+
+          smallerButton.addEventListener("click", () => {
+            changePanelSize(-1);
+          });
+
+          largerButton.addEventListener("click", () => {
+            changePanelSize(1);
+          });
+
+          maximizeButton.addEventListener("click", () => {
+            togglePanelMaximized();
+          });
+
+          saveButton.addEventListener("click", () => {
+            saveConversation();
+          });
+
+          window.addEventListener("resize", () => {
+            applyPanelSize();
+          });
+
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" && !event.shiftKey) {
+              event.preventDefault();
+              form.requestSubmit();
+            }
+          });
+
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const message = input.value.trim();
+            if (!message || input.disabled) {
+              return;
+            }
+            input.value = "";
+            sendMessage(message);
+          });
+
+          loadPanelSize();
+        })();
+      </script>
+    {% endif %}
   </body>
 </html>

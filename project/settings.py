@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,8 @@ SECRET_KEY = "django-insecure-&10&r1jz)ra0)t&n%czu3#_al^ln4jb@nzs4(#qfu0i^i%_nhl
 DEBUG = False
 
 ALLOWED_HOSTS = ["thesysm.com", "www.thesysm.com"]
+
+CSRF_TRUSTED_ORIGINS = ["https://thesysm.com", "https://www.thesysm.com"]
 
 
 # Application definition
@@ -103,19 +106,20 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
+LANGUAGE_CODE = "ko-kr"
+TIME_ZONE = "Asia/Seoul"
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = "/var/www/static/"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = "/var/www/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -124,3 +128,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
+
+CHAT_WIDGET_ENABLED = os.getenv("CHAT_WIDGET_ENABLED", "True") == "True"
+CHAT_OLLAMA_BASE_URL = os.getenv("CHAT_OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+CHAT_OLLAMA_MODEL = os.getenv("CHAT_OLLAMA_MODEL", "qwen3:8b")
+CHAT_OLLAMA_TIMEOUT_SECONDS = int(os.getenv("CHAT_OLLAMA_TIMEOUT_SECONDS", "30"))
+CHAT_HISTORY_MAX_MESSAGES = int(os.getenv("CHAT_HISTORY_MAX_MESSAGES", "6"))
+CHAT_MESSAGE_MAX_LENGTH = int(os.getenv("CHAT_MESSAGE_MAX_LENGTH", "1000"))
+THEHOME_SERVICE_CONTROL_SCRIPT = os.getenv(
+    "THEHOME_SERVICE_CONTROL_SCRIPT",
+    "/home/cskang/ganzskang/theHome/production/ops/thehome-service-control",
+)
+THEHOME_SERVICE_CONTROL_USE_SUDO = os.getenv("THEHOME_SERVICE_CONTROL_USE_SUDO", "True") == "True"
+CHAT_SYSTEM_PROMPT = os.getenv(
+    "CHAT_SYSTEM_PROMPT",
+    "너는 THESYSM Master Service Gateway의 친절한 AI 안내 챗봇이다. 현재 게이트웨이의 주요 서비스는 theDetect(스마트폰 객체탐지 모델 제작, 학습, Android 배포, 탐지 로그 관리), thePET(페트병 이미지 인식 및 순환자원 운영), petlens(PET 병 형태 분류를 위한 이미지 업로드, 데이터셋 구축, 모델 학습, 추론 로그 관리), theShop, Anglangl, 무한반복, 영화보기, 주소관리, 웹디자인, ERP, theBuildQ, theStock, theArt, Admin이다. 화면에서 비활성으로 표시된 서비스는 운영 중이 아닐 수 있다고 안내한다. 사용자가 서비스 목적과 진입 방법을 쉽게 이해하도록 돕고, 모르는 내용은 추측하지 않는다. 답변은 짧고 친절한 한국어로 한다. 개인정보나 민감한 정보를 입력하도록 유도하지 않는다. /no_think",
+)
